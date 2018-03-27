@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="sass.css">
+</head>
+<body>
+	<div class="net">
+		<span>采集于： <a href="https://blog.csdn.net/liujie19901217/article/details/51588789">https://blog.csdn.net/liujie19901217/article/details/51588789</a>
+</span>
+	</div>
+	<div class="introduce">
+		<p>Sass是一种CSS 预处理器。用一种专门的编程语言，进行 Web 页面样式设计，然后再编译成正常的 CSS 文件，以供项目使用。CSS 预处理器为 CSS 增加一些编程的特性，无需考虑浏览器的兼容性问题，可以让你的 CSS 更加简洁、适应性更强、可读性更佳，更易于代码的维护等诸多好处。</p>
+		
+	</div>
+	<div class="different">
+		<p>Sass 和 SCSS 有什么区别</p>
+		<span>Sass 和 SCSS 其实是同一种东西，我们平时都称之为 Sass，两者之间不同之处有以下两点： 
+- 文件扩展名不同，Sass 是以“.sass”后缀为扩展名，而 SCSS 是以“.scss”后缀为扩展名 
+- 语法书写方式不同，Sass 是以严格的缩进式语法规则来书写，不带大括号({})和分号(;)，而 SCSS 的语法书写和我们的 CSS 语法书写方式非常类似。</span>
+	</div>
+	<div class="part1">
+		<p class="title1">自动化编译</p>
+		<span>
+			Gulp 配置 Sass 编译的示例代码
+		</span>
+
+		<p>
+			var gulp = require('gulp');
+			var sass = require('gulp-sass');
+
+			gulp.task('sass', function () {
+			    gulp.src('./scss/*.scss')
+			        .pipe(sass())
+			        .pipe(gulp.dest('./css'));
+			});
+
+			gulp.task('watch', function() {
+			    gulp.watch('scss/*.scss', ['sass']);
+			});
+
+			gulp.task('default', ['sass','watch']);
+		</p>
+		<ul>
+			<li>不同样式风格的输出方法</li>
+			<li>嵌套输出方式 nested</li>
+			<li>展开输出方式 expanded</li>
+			<li>紧凑输出方式 compact</li>
+			<li>压缩输出方式 compressed</li>
+			<li>特性</li>
+			<li>$变量</li>
+			<li>什么时候声明变量？</li>
+			<li>该值至少重复出现了两次； </li>
+			<li>该值至少可能会被更新一次； </li>
+			<li>该值所有的表现都与变量有关。 </li>
+			<li>当某一个值需要经常使用的时候，我们就可以将其定义为一个变量，方便日后的修改和使用 </li>
+		</ul>
+		<p>默认变量 </p>
+		<span>sass 的默认变量仅需要在值后面加上 !default 即可。</span>
+
+		<p>
+			$baseLineHeight:1.5 !default;
+			body{
+			    line-height: $baseLineHeight; 
+			}		
+		</p>
+
+	
+		<p>sass 的默认变量一般是用来设置默认值，然后根据需求来覆盖的，覆盖的方式也很简单，只需要在默认变量之前重新声明下变量即可。</p>
+		<p>嵌套</p>
+		<p>嵌套相当于css中的后代选择</p>
+		<p>选择器嵌套</p>
+		<p>
+			nav {
+			  a {
+			    color: red;
+			    header & {
+			      color:green;
+			    }
+			  }  
+			}
+		</p>
+
+		<p>编译后：</p>
+
+		<p>
+			nav a {
+			   color: red;
+			}
+			header nav a {
+			   color: green;
+			}
+		</p>
+
+		<p>注意区分&符的位置，置前表示它为父集，置后代表它为子集</p>
+
+		<p>属性嵌套</p>
+		<p>
+			.box {
+			  font: {
+			   size: 12px;
+			   weight: bold;
+			  }  
+			}
+		</p>
+
+		<p>编译后：</p>
+
+		<p>
+			.box {
+			     font-size: 12px;
+			     font-weight: bold;
+			}
+		</p>
+
+		<p>类似的属性还有margin、padding等</p>
+
+		<h1>伪类嵌套</h1>
+		<p>
+			.clearfix{
+			&:before,
+			&:after {
+			    content:"";
+			    display: table;
+			  }
+			&:after {
+			    clear:both;
+			    overflow: hidden;
+			  }
+			}
+		</p>
+
+		<p>编译后：</p>
+
+		<p>
+			clearfix:before, .clearfix:after {
+			  content: "";
+			  display: table;
+			}
+			.clearfix:after {
+			  clear: both;
+			  overflow: hidden;
+			}
+		</p>
+
+		<p>选择器嵌套最大的问题：是将使最终的代码难以阅读。开发者需要花费巨大精力计算不同缩进级别下的选择器具体的表现效果。</p>
+		<h1>混合宏@mixin</h1>
+
+		<p>当我们的样式变得越来越复杂，需要重复使用大段的样式时，使用变量就无法达到我们目了。这个时候 Sass 中的混合宏就会变得非常有意义。 
+在 Sass 中，使用“@mixin”来声明一个混合宏 </p>
+		<p>我们可以通过关键词”@include”来调用声明好的混合宏 </p>
+
+		<h2>- 不带参数混合宏</h2>
+
+		<p>
+			@mixin border-radius{
+			    -webkit-border-radius: 5px;
+			    border-radius: 5px;
+			}
+		</p>
+
+		<span>大括号里面是复用的样式代码。</span>
+
+		<h2>带参数混合宏</h2>
+		<p>
+			@mixin border-radius($radius){
+			    -webkit-border-radius: $radius;
+			    border-radius: $radius;
+			}
+		</p>
+
+		<p>这个混合宏有一个不带值的参数，当我们需要调用该混合宏时，传入相应的值就可以了</p>
+
+		<p>
+			@mixin border-radius($radius:5px){
+			    -webkit-border-radius: $radius;
+			    border-radius: $radius;
+			}
+		</p>
+
+		<p>这个混合宏有一个带值的参数，当你的页面中的圆角很多地方都是”5px”的圆角，那么这个时候只需要调用默认的混合宏”border-radius”。 
+有的时候，页面中有些元素的圆角值不一样，那么可以根据需求给混合宏传入不同的值</p>
+
+		<p>
+			@mixin size($width,$height){
+			  width: $width;
+			  height: $height;
+			}
+		</p>
+
+		<p>还可以给混合宏传入多个参数 </p>
+		<p>有一个特别的参数”…”。当混合宏传的参数过多之时，可以使用参数来替代</p>
+
+		<h2>复杂的混合宏</h2>
+		<span>
+			@mixin box-shadow($shadow...) {
+			  @if length($shadow) >= 1 {
+			    @include prefixer(box-shadow, $shadow);
+			  } @else{
+			    $shadow:0 0 4px rgba(0,0,0,.3);
+			    @include prefixer(box-shadow, $shadow);
+			  }
+			}
+		</span>
+
+		<p>上面的混合宏中存在逻辑判断 </p>
+		<p>这个 box-shadow 的混合宏，带有多个参数，这个时候可以使用” … “来替代。当 $shadow 的参数数量值大于或等于”1”时，表示有多个阴影值，反之调用默认的参数值”0 0 4px rgba(0,0,0,.3)”。 
+将一些样式代码封装起来，通过混合宏名调用，并传入相应的参数来实现。这样可以少些很多代码</p>
+
+		<div>
+			@mixin transition($transition){
+			    -webkit-transition:$transition;
+			    -moz-transition:$transition;
+			    -ms-transition:$transition;
+			    -o-transition:$transition;
+			    transition:$transition;
+			}
+		</div>
+		<div>
+			@mixin transform-origin($origin){
+			    -webkit-transform-origin:$origin;
+			    -moz-transform-origin:$origin;
+			    -ms-transform-origin:$origin;
+			    -o-transform-origin:$origin;
+			    transform-origin:$origin;
+			}
+		</div>
+		<div>
+			@mixin scale($scale){
+			    -webkit-transform:scale($scale);
+			    -moz-transform:scale($scale);
+			    -ms-transform:scale($scale);
+			    -o-transform:scale($scale);
+			    transform:scale($scale);
+			}
+		</div>
+		<div>
+			@mixin opacity($opacity){
+			    opacity: $opacity;
+			    filter: alpha(opacity=$opacity * 100);
+			}
+		</div>
+
+		<h2>混合宏的不足</h2>
+		<p>混合宏在实际编码中给我们带来很多方便之处，特别是对于复用重复代码块。但其最大的不足之处是会生成冗余的代码块。比如在不同的地方调用一个相同的混合宏时:</p>
+		<div>
+			@mixin border-radius{
+			  -webkit-border-radius: 3px;
+			  border-radius: 3px;
+			}
+
+			.box {
+			  @include border-radius;
+			  margin-bottom: 5px;
+			}
+			.btn {
+			  @include border-radius;
+			}
+		</div>
+
+		<p>编译后：</p>
+
+		<div>
+			.box {
+			  -webkit-border-radius: 3px;
+			  border-radius: 3px;
+			  margin-bottom: 5px;
+			}
+
+			.btn {
+			  -webkit-border-radius: 3px;
+			  border-radius: 3px;
+			}
+		</div>
+
+		<p>
+			从上面的代码来看：Sass 在调用相同的混合宏时，并不能智能的将相同的样式代码块合并在一起。这也是 Sass 的混合宏最不足之处。 
+用来引入需要的.scss文件，这里注意：引入文件不要加后缀
+		</p>
+
+		<h1>@extend(继承)</h1>
+		<p>在 Sass 中是通过关键词 “@extend”来继承已存在的类样式块，从而实现代码的继承。</p>
+
+		<div>
+			.btn {
+			  border: 1px solid #ccc;
+			  padding: 6px 10px;
+			  font-size: 14px;
+			}
+			.btn-primary {
+			  background-color: #f36;
+			  color: #fff;
+			  @extend .btn;
+			}
+		</div>
+
+		<p>编译后:</p>
+
+		<div>
+			.btn, .btn-primary,{
+			  border: 1px solid #ccc;
+			  padding: 6px 10px;
+			  font-size: 14px;
+			}
+			.btn-primary {
+			  background-color: #f36;
+			  color: #fff;
+			}
+		</div>
+
+		<p>从上面的代码可以看出，在 Sass 中的继承，可以继承类样式块中所有样式代码，而且编译出来的 CSS 会将选择器合并在一起，形成组合选择器，这样可以实现重复代码的合并。</p>
+		<h2>占位符 %placeholder</h2>
+		<p>Sass 中的占位符 %placeholder 功能是一个很强大，很实用的一个功能。它可以取代以前 CSS 中的基类造成的代码冗余的情形。因为 %placeholder 声明的代码，如果不被 @extend 调用的话，不会产生任何代码。</p>
+		<p>
+			%mt5 {
+			  margin-top: 5px;
+			}
+			%pt5{
+			  padding-top: 5px;
+			}
+			.btn {
+			  @extend %mt5;
+			  @extend %pt5;
+			}
+			.block {
+			  @extend %mt5;
+			  span {
+			    @extend %pt5;
+			  }
+			}
+		</p>
+
+		<p>编译后：</p>
+
+		<div>
+			.btn, .block {
+			  margin-top: 5px;
+			}
+			.btn, .block span {
+			  padding-top: 5px;
+			}
+		</div>
+
+		<p>从编译出来的 CSS 代码可以看出，通过 @extend 调用的占位符，编译出来的代码会将相同的代码合并在一起。这也是我们希望看到的效果，也让你的代码变得更为干净。</p>
+		<h2>混合宏 VS 继承 VS 占位符</h2>
+		<h3>Sass 中的混合宏使用</h3>
+		<p>
+			总结：编译出来的 CSS 清晰告诉了大家，混合宏不会自动合并相同的样式代码，如果在样式文件中调用同一个混合宏，会产生多个对应的样式代码，造成代码的冗余。不过它的优点是可以传参数。 
+		</p>
+		<p>
+			建议：如果你的代码块中涉及到变量，建议使用混合宏来创建相同的代码块。
+		</p>
+
+		<h3>Sass 中继承</h3>
+		<p>
+			总结：使用继承后，编译出来的 CSS 会将使用继承的代码块合并到一起，通过组合选择器的方式向大家展现。这样编译出来的代码相对于混合宏来说要干净的多，也是我们期望看到。但是它不能传变量参数。 
+		</p>
+		<p>
+			建议：如果你的代码块不需要专任何变量参数，而且有一个基类已在文件中存在，那么建议使用 Sass 的继承。
+		</p>
+
+		<h2>占位符</h2>
+		<p>总结：编译出来的 CSS 代码和使用继承基本上是相同，只是不会在代码中生成占位符 mt 的选择器。那么占位符和继承的主要区别的，占位符是独立定义，不调用的时候是不会在 CSS 中产生任何代码；继承是首先有一个基类存在，不管调用与不调用，基类的样式都将会出现在编译出来的 CSS 代码中。 </p>
+		<p>这里写图片描述</p>
+
+		<h3>插值#{}</h3>
+		<div>
+			$properties: (margin, padding);
+			@mixin set-value($side, $value) {
+			    @each $prop in $properties {
+			        #{$prop}-#{$side}: $value;
+			    }
+			}
+			.login-box {
+			    @include set-value(top, 14px);
+			}
+		</div>
+
+		<p>编译后:</p>
+
+		<div>
+			.login-box {
+			  margin-top: 14px;
+			  padding-top: 14px; 
+			  }
+		</div>
+
+		<p>注释</p>
+		<p>类似 CSS 的注释方式，使用”/* “开头，结属使用 “*/ “</p>
+		<p>类似JS的注释方式，使用”//” </p>
+		<p>两者区别，前者会在编译出来的 CSS 显示，后者在编译出来的 CSS 中不会显示</p>
+		<h3>运算</h3>
+		<p>在 CSS 中能做运算的，到目前为止仅有 calc() 函数可行。但在 Sass 中，运算只是其基本特性之一。在 Sass 中可以做各种数学计算。但是注意单位要是相同类型的才可以。</p>
+		<h2>Sass的控制命令</h2>
+		<div>
+			@if
+			@mixin blockOrHidden($boolean:true) {
+			  @if $boolean {
+			      display: block;
+			    }
+			    @else {
+			      display: none;
+			    }
+			}
+			.block {
+			  @include blockOrHidden;
+			}
+			.hidden{
+			  @include blockOrHidden(false);
+			}
+		</div>
+
+		<p>编译后：</p>
+
+		<div>
+			.block {
+			  display: block;
+			}
+			.hidden {
+			  display: none;
+			}
+		</div>
+
+		<p>@import</p>
+		<p>Sass 扩展了 CSS 的 @import 规则，让它能够引入 SCSS 和 Sass 文件。 所有引入的 SCSS 和 Sass 文件都会被合并并输出一个单一的 CSS 文件。 另外，被导入的文件中所定义的变量或 mixins 都可以在主文件中使用。</p>	
+
+	</div>
+
+</body>
+</html>
